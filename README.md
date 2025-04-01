@@ -4,7 +4,7 @@ A powerful web crawling and content analysis library that allows you to crawl we
 
 ## Features
 
-- Website crawling with [Pathik](https://github.com/menloresearch/pathik)
+- Website crawling with [Pathik](https://github.com/menloresearch/pathik-menlo)
 - Content analysis using LLMs (Groq, OpenAI, etc.)
 - Structured data extraction from web pages
 - PostgreSQL storage of crawled data
