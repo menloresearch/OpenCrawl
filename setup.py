@@ -1,17 +1,21 @@
 #!/usr/bin/env python
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 setup(
     name="opencrawl",
-    version="0.1.0",
+    version="0.1.3",
     description="Integrated website crawler and content analysis library",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     author="OpenCrawl Team",
     author_email="info@opencrawl.org",
     url="https://github.com/opencrawl/opencrawl",
-    packages=find_packages(),
+    packages=find_namespace_packages(exclude=["opencrawl.examples.frontend.node_modules*"]),
+    include_package_data=True,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
