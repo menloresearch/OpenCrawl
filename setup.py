@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="opencrawl",
-    version="0.1.0",
+    version="0.1.1",
     description="Integrated website crawler and content analysis library",
     author="OpenCrawl Team",
     author_email="info@opencrawl.org",
