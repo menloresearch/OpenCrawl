@@ -1,6 +1,22 @@
-fastapi>=0.100.0
-uvicorn>=0.23.0
-python-dotenv>=1.0.0
-requests>=2.31.0
-bhumi>=0.1.0
-pydantic>=2.0.0 
+# Core dependencies
+fastapi>=0.95.0
+turboapi>=0.1.0
+uvicorn>=0.21.0
+pydantic>=2.0.0
+
+# OpenCrawl dependencies
+pathik>=0.3.0
+bhumi==0.1.6  # Pinned version that requires Rust
+satya>=0.1.0
+psycopg2-binary>=2.9.0
+python-dotenv>=0.21.0
+uuid>=1.30
+
+# Kafka dependencies
+confluent-kafka>=2.0.0
+
+# API dependencies
+starlette>=0.28.0
+python-multipart>=0.0.6
+httpx>=0.24.0 
+opencrawl==0.1.0

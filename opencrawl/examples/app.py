@@ -9,17 +9,9 @@ from typing import List, Dict, Any, Optional
 import uuid
 from fastapi import Request, HTTPException
 
-# Add parent directory to path to import opencrawl modules
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
-
 from turboapi import TurboAPI
 from satya import Model, Field
-
-# Import the OpenCrawl API
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from open_crawl_api import process_urls
+from opencrawl.open_crawl_api import process_urls
 
 app = TurboAPI(title="OpenCrawl API", 
                description="API for crawling websites, analyzing content, and storing data",

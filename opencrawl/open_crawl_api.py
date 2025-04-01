@@ -18,13 +18,36 @@ if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
 import pathik
-from website_crawler_db import (
-    setup_database, 
-    store_website_data, 
-    create_thread, 
-    thread_exists, 
-    create_user
-)
+
+# Handle import for website_crawler_db based on environment
+try:
+    # Try absolute import first (for Docker)
+    from OpenCrawl.opencrawl.website_crawler_db import (
+        setup_database, 
+        store_website_data, 
+        create_thread, 
+        thread_exists, 
+        create_user
+    )
+except ImportError:
+    try:
+        # Try direct opencrawl package
+        from opencrawl.website_crawler_db import (
+            setup_database, 
+            store_website_data, 
+            create_thread, 
+            thread_exists, 
+            create_user
+        )
+    except ImportError:
+        # Fall back to relative import (for local development)
+        from website_crawler_db import (
+            setup_database, 
+            store_website_data, 
+            create_thread, 
+            thread_exists, 
+            create_user
+        )
 
 async def crawl_urls(
     user_id: str,
@@ -101,7 +124,10 @@ async def crawl_urls(
             # The pathik library should automatically fall back to simulation mode without Kafka
         
         # Import ContentAnalyzer only when needed (helps with dependency management)
-        from opencrawl import ContentAnalyzer
+        try:
+            from opencrawl import ContentAnalyzer
+        except ImportError:
+            from opencrawl.opencrawl import ContentAnalyzer
         
         # Initialize content analyzer with a try/except block to handle missing API key
         try:

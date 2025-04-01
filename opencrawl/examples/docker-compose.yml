@@ -1,0 +1,85 @@
+version: '3'
+
+services:
+  # OpenCrawl API Service
+  api:
+    build:
+      context: ../..
+      dockerfile: opencrawl/examples/Dockerfile
+    container_name: opencrawl-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_CONNECTION_STRING=postgresql://postgres:postgres@postgres:5432/opencrawl
+      - KAFKA_BROKERS=kafka:29092
+      - KAFKA_TOPIC=pathik_crawl_data
+      - PYTHONPATH=/app
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - kafka
+    networks:
+      - opencrawl-network
+
+  # PostgreSQL Database (v17)
+  postgres:
+    image: postgres:17
+    container_name: opencrawl-postgres-api
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: opencrawl
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../../init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - opencrawl-network
+
+  # Kafka and Zookeeper for message streaming
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: opencrawl-zookeeper-api
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - opencrawl-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: opencrawl-kafka-api
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_MESSAGE_MAX_BYTES: 10485760
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 10485760
+      KAFKA_MAX_REQUEST_SIZE: 10485760
+    networks:
+      - opencrawl-network
+
+volumes:
+  postgres_data:
+
+networks:
+  opencrawl-network:
+    driver: bridge 
