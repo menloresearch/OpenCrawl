@@ -12,14 +12,27 @@ A powerful web crawling and content analysis library that allows you to crawl we
 
 ## Installation
 
+You can install OpenCrawl directly from PyPI:
+
+```bash
+pip install opencrawl
+```
+
+Or install from source:
+
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/opencrawl.git
+git clone https://github.com/menloresearch/opencrawl.git
 cd opencrawl
 
 # Install the package
 pip install -e .
 ```
+
+## Documentation
+
+- [Changelog](CHANGELOG.md) - List of changes and version history
+- [Security Policy](SECURITY.md) - Security guidelines and reporting
 
 ## Docker Setup
 

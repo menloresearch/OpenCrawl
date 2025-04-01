@@ -1,0 +1,10 @@
+include LICENSE
+include README.md
+recursive-include opencrawl *.py
+recursive-include opencrawl/examples *.py
+recursive-include opencrawl/examples *.txt
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude *.so
+global-exclude .DS_Store
+recursive-exclude opencrawl/examples/frontend/node_modules * 
