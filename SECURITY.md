@@ -4,13 +4,13 @@
 
 We release patches for security vulnerabilities. Here are the versions that are currently being supported with security updates.
 
-| Version | Supported          |
+<!-- | Version | Supported          |
 | ------- | ------------------ |
-| 0.1.x   | :white_check_mark: |
+| 0.1.x   | :white_check_mark: | -->
 
 ## Reporting a Vulnerability
 
-Please report (suspected) security vulnerabilities to security@menloresearch.org. You will receive a response from us within 48 hours. If the issue is confirmed, we will release a patch as soon as possible depending on complexity.
+Please report (suspected) security vulnerabilities to rach@menlo.ai. You will receive a response from us within 48 hours. If the issue is confirmed, we will release a patch as soon as possible depending on complexity.
 
 ## Security Best Practices
 
