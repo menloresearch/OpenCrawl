@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -23,6 +25,44 @@ jobs:
     
     - name: Build package
       run: python -m build
+    
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+        body: |
+          ## What's Changed
+          See [CHANGELOG.md](CHANGELOG.md) for details.
+          
+          ## Installation
+          ```bash
+          pip install opencrawl
+          ```
+          
+          ## Ethical Crawling
+          This release maintains our commitment to ethical web crawling through:
+          - Strict robots.txt compliance
+          - Rate limiting per domain
+          - Respectful delays between requests
+          - Queue-based processing
+          
+          Making the web a better place, one respectful crawl at a time 🌐✨
+    
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/opencrawl-${{ github.ref_name }}.tar.gz
+        asset_name: opencrawl-${{ github.ref_name }}.tar.gz
+        asset_content_type: application/gzip
     
     - name: Publish to PyPI
       env:
