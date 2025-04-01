@@ -1,6 +1,6 @@
 # OpenCrawl
 
-A powerful web crawling and content analysis library that allows you to crawl websites, analyze their content using LLMs, and store the structured data for further use.
+A powerful web crawling and content analysis library that allows you to crawl websites, analyze their content using LLMs, and store the structured data for further use. Built with ethics and efficiency in mind.
 
 ## Features
 
@@ -24,6 +24,24 @@ This approach ensures:
 - Respect for website owners' preferences
 - Reduced server load on target websites
 - Compliance with web standards and best practices
+
+## Efficient Data Processing
+
+OpenCrawl uses Kafka for high-throughput data processing, enabling efficient and ethical crawling at scale:
+
+### Why Kafka?
+- **Parallel Processing**: Process multiple URLs simultaneously while respecting rate limits
+- **Stream Processing**: Real-time analysis of crawled content
+- **Scalability**: Handle large volumes of data without overwhelming target servers
+- **Reliability**: Ensure no data is lost during processing
+- **Backpressure**: Automatically adjust processing speed based on system load
+
+### Ethical Throughput
+While Kafka enables high throughput, we maintain ethical crawling practices:
+- Rate limiting per domain
+- Respectful delays between requests
+- Queue-based processing to prevent server overload
+- Smart batching of requests to optimize efficiency while staying within limits
 
 ## Installation
 
@@ -94,10 +112,11 @@ async def main():
         }
     )
     
-    # Process a list of URLs
+    # Process a list of URLs with ethical rate limiting
     results = await crawler.process_urls(
         urls=["https://example.com", "https://news.ycombinator.com"],
-        verbose=True
+        verbose=True,
+        rate_limit=1.0  # 1 request per second per domain
     )
     
     # Print the results
@@ -158,6 +177,9 @@ crawler = OpenCrawl(
         "brokers": "kafka:9092",
         "topic": "custom_topic",
         "max_request_size": 20971520,  # 20MB
+        "rate_limit": 2.0,             # 2 requests per second per domain
+        "batch_size": 100,             # Process URLs in batches
+        "max_concurrent": 10           # Maximum concurrent requests
     }
 )
 ```
@@ -170,11 +192,16 @@ results = await crawler.process_urls(
     user_id="custom-user-id",
     thread_id="custom-thread-id",
     thread_name="My Research Project",
-    content_type="both",  # Extract both HTML and Markdown
-    parallel=True,        # Process URLs in parallel
-    verbose=True          # Show detailed logs
+    content_type="both",     # Extract both HTML and Markdown
+    parallel=True,          # Process URLs in parallel
+    rate_limit=1.0,        # Respect rate limits
+    verbose=True           # Show detailed logs
 )
 ```
+
+## Contributing
+
+We welcome contributions that help make web crawling more ethical and efficient! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
 
 ## License
 
