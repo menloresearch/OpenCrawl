@@ -10,6 +10,21 @@ A powerful web crawling and content analysis library that allows you to crawl we
 - PostgreSQL storage of crawled data
 - Kafka integration for scalable processing
 
+## Ethical Crawling
+
+OpenCrawl is built with ethical web crawling in mind. Our crawler, Pathik, strictly adheres to website robots.txt files and respects website crawling policies. This means:
+
+- Only crawls websites that explicitly allow crawling through robots.txt
+- Respects crawl rate limits and delays between requests
+- Follows website-specific crawling rules
+- Helps maintain a sustainable and respectful web ecosystem
+
+This approach ensures:
+- Safe and secure crawling practices
+- Respect for website owners' preferences
+- Reduced server load on target websites
+- Compliance with web standards and best practices
+
 ## Installation
 
 You can install OpenCrawl directly from PyPI:
