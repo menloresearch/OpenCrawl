@@ -154,10 +154,13 @@ Return ONLY a JSON object with the following fields:
                 data["title"] = f"Content from {domain}"
                 
             if not data.get("summary"):
-                # Create a generic summary from the first 200 characters
-                content_preview = content[:200].replace("\n", " ").strip()
-                data["summary"] = f"Content preview: {content_preview}..."
-                
+                # Create a summary from the first part of the content
+                summary = "Content could not be fully analyzed. This appears to be a web page."
+                if content and len(content) > 100:
+                    content_preview = content[:100].replace("\n", " ")
+                    summary += f" Preview: {content_preview}..."
+                data["summary"] = summary
+            
             # Handle main_topics field
             if not data.get("main_topics") or not isinstance(data["main_topics"], list) or len(data["main_topics"]) == 0:
                 # Extract domain and path elements as fallback topics
@@ -227,7 +230,8 @@ Return ONLY a JSON object with the following fields:
                 # Create a summary from the first part of the content
                 summary = "Content could not be fully analyzed. This appears to be a web page."
                 if content and len(content) > 100:
-                    summary += f" Preview: {content[:100].replace('\n', ' ')}..."
+                    content_preview = content[:100].replace("\n", " ")
+                    summary += f" Preview: {content_preview}..."
                 
                 # Create fallback data
                 fallback_data = {
