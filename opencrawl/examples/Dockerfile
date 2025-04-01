@@ -63,7 +63,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rustup default stable
 
 # Copy requirements first for better layer caching
-COPY examples/requirements.txt .
+COPY opencrawl/examples/requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
@@ -77,7 +77,10 @@ RUN mkdir -p /usr/local/lib/python3.9/site-packages/pathik/bin/linux_arm64/ && \
     chmod +x /usr/local/lib/python3.9/site-packages/pathik/bin/linux_arm64/pathik_bin
 
 # Copy only the example app files
-COPY examples /app/examples/
+COPY opencrawl/examples /app/examples/
+
+# Copy the .env file
+COPY opencrawl/examples/.env /app/examples/
 
 # Create a temporary directory for pathik with proper permissions
 RUN mkdir -p /tmp/pathik_data && chmod 777 /tmp/pathik_data

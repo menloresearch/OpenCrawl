@@ -11,8 +11,6 @@ from fastapi import Request, HTTPException
 
 from turboapi import TurboAPI
 from satya import Model, Field
-
-# Import the OpenCrawl API directly as an installed package
 from opencrawl.open_crawl_api import process_urls
 
 app = TurboAPI(title="OpenCrawl API", 
