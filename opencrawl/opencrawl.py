@@ -274,7 +274,7 @@ class OpenCrawl:
         
         # Default Kafka configuration
         self.kafka_config = {
-            "brokers": "localhost:9092",
+            "brokers": "kafka:29092",
             "topic": "pathik_crawl_data",
             "max_request_size": 10485760,  # 10MB
             "message_max_bytes": 10485760,  # 10MB

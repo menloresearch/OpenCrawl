@@ -99,7 +99,7 @@ async def crawl_urls(
     
     try:
         # Set up Kafka configuration
-        os.environ["KAFKA_BROKERS"] = "localhost:9092"
+        os.environ["KAFKA_BROKERS"] = os.getenv("KAFKA_BROKERS", "kafka:29092")
         os.environ["KAFKA_TOPIC"] = "pathik_crawl_data"
         os.environ["KAFKA_MAX_REQUEST_SIZE"] = "10485760"  # 10MB
         os.environ["KAFKA_MESSAGE_MAX_BYTES"] = "10485760"  # 10MB
