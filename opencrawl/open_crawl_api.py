@@ -98,12 +98,25 @@ async def crawl_urls(
     metadata_list = []
     
     try:
-        # Set up Kafka configuration
-        os.environ["KAFKA_BROKERS"] = os.getenv("KAFKA_BROKERS", "kafka:29092")
-        os.environ["KAFKA_TOPIC"] = "pathik_crawl_data"
-        os.environ["KAFKA_MAX_REQUEST_SIZE"] = "10485760"  # 10MB
-        os.environ["KAFKA_MESSAGE_MAX_BYTES"] = "10485760"  # 10MB
-        os.environ["KAFKA_REPLICA_FETCH_MAX_BYTES"] = "10485760"  # 10MB
+        # Set up Kafka configuration - prioritize existing environment variables
+        if not os.getenv("KAFKA_BROKERS"):
+            os.environ["KAFKA_BROKERS"] = "redpanda:9092"
+        # Make sure we're not accidentally using localhost
+        if "localhost" in os.environ["KAFKA_BROKERS"]:
+            os.environ["KAFKA_BROKERS"] = "redpanda:9092"
+        
+        # These are less critical but still set them if not already set
+        if not os.getenv("KAFKA_TOPIC"):
+            os.environ["KAFKA_TOPIC"] = "pathik_crawl_data"
+        if not os.getenv("KAFKA_MAX_REQUEST_SIZE"):
+            os.environ["KAFKA_MAX_REQUEST_SIZE"] = "10485760"  # 10MB
+        if not os.getenv("KAFKA_MESSAGE_MAX_BYTES"):
+            os.environ["KAFKA_MESSAGE_MAX_BYTES"] = "10485760"  # 10MB
+        if not os.getenv("KAFKA_REPLICA_FETCH_MAX_BYTES"):
+            os.environ["KAFKA_REPLICA_FETCH_MAX_BYTES"] = "10485760"  # 10MB
+        
+        # Log the broker configuration for debugging
+        print(f"Using Kafka brokers: {os.environ['KAFKA_BROKERS']}")
         
         # Stream URLs to Kafka using pathik's built-in functionality
         print(f"Session ID: {user_id}")

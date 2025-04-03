@@ -12,14 +12,17 @@ services:
       - "8000:8000"
     environment:
       - POSTGRES_CONNECTION_STRING=postgresql://postgres:postgres@postgres:5432/opencrawl
-      - KAFKA_BROKERS=kafka:29092
+      - KAFKA_BROKERS=redpanda:9092
       - KAFKA_TOPIC=pathik_crawl_data
       - PYTHONPATH=/app
+      # Explicitly set these to avoid pathik using defaults
+      - PATHIK_KAFKA_BROKERS=redpanda:9092
+      - PATHIK_BROKER_URL=redpanda:9092
     env_file:
       - .env
     depends_on:
       - postgres
-      - kafka
+      - redpanda
     networks:
       - opencrawl-network
 
@@ -45,35 +48,35 @@ services:
     networks:
       - opencrawl-network
 
-  # Kafka and Zookeeper for message streaming
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.3.0
-    container_name: opencrawl-zookeeper-api
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+  # Redpanda (Kafka API compatible)
+  redpanda:
+    image: redpandadata/redpanda:latest
+    container_name: opencrawl-redpanda
     ports:
-      - "2181:2181"
-    networks:
-      - opencrawl-network
-
-  kafka:
-    image: confluentinc/cp-kafka:7.3.0
-    container_name: opencrawl-kafka-api
-    depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092"
+      - "9092:9092"      # Kafka API
+      - "9644:9644"      # Redpanda Admin API
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_MESSAGE_MAX_BYTES: 10485760
-      KAFKA_REPLICA_FETCH_MAX_BYTES: 10485760
-      KAFKA_MAX_REQUEST_SIZE: 10485760
+      REDPANDA_RPC_SERVER_LISTEN_ADDR: 0.0.0.0
+      REDPANDA_KAFKA_ADDRESS: 0.0.0.0:9092
+      REDPANDA_PANDAPROXY_PANDAPROXY_API_ADDR: 0.0.0.0:8082
+      REDPANDA_CONFIG_ORGANIZATION_NAME: opencrawl
+      REDPANDA_CONFIG_CLUSTER_NAME: opencrawl-local
+      REDPANDA_ADVERTISED_KAFKA_ADDR: redpanda:9092
+      REDPANDA_ADMIN_ADVERTISED_SERVER_ADDR: redpanda:9644
+      REDPANDA_SEED_SERVERS: "redpanda:33145"
+      REDPANDA_DISABLE_METRICS: "true"
+      REDPANDA_UNBOUNDED_RETRIES: "false"
+      REDPANDA_AUTO_CREATE_TOPICS_ENABLED: "true"
+      REDPANDA_CONFIG_SUPERUSERS: "[]"
+    command:
+      - redpanda
+      - start
+      - --smp=1
+      - --memory=1G
+      - --reserve-memory=0M
+      - --overprovisioned
+      - --node-id=0
+      - --check=false
     networks:
       - opencrawl-network
 
