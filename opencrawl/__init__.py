@@ -2,7 +2,7 @@
 OpenCrawl - An integrated web crawling and content analysis library
 """
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 from .opencrawl import OpenCrawl, ContentAnalyzer, WebpageContent
 
